@@ -1,36 +1,46 @@
-package com.codercampus.Assignment11.web;
+package com.codercampus.Assignment11.service;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.codercampus.Assignment11.domain.Transaction;
-import com.codercampus.Assignment11.service.TransactionService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import com.codercampus.Assignment11.repository.TransactionRepository;
 
-@Controller
-public class TransactionController {
-  @Autowired 
-  private TransactionService transactionService;
+@Service
+public class TransactionService {
+	
+	@Autowired
+	private TransactionRepository transactionRepo;
 
-  // Fetch transactions from repository to HTML view
-  @GetMapping("/transactions")
-  public String getTransactions(ModelMap model) {
-    List<Transaction> allTransactions = transactionService.findAll();
-    // Transaction transaction = new Transaction();
-    // model.put("transaction", transaction);
-    model.put("transactions", allTransactions); // all transactions
-    for (Transaction transaction : allTransactions) {
-      System.out.println(transaction);
-    }
-    return "transactions";
-  }
+	public List<Transaction> findAll() {
+		List<Transaction> sortedTransaction = 
+				transactionRepo.findAll()
+				.stream()
+				.sorted(Comparator.comparing(Transaction::getDate))
+				.collect(Collectors.toList());
+		
+		return sortedTransaction;
+	}
+	
 
-  @GetMapping("/transactions/{transactionId}")
-  public String getTransaction( @PathVariable Long transactionId, ModelMap model) {
-    Transaction transactionById = transactionService.findById(transactionId);
-    model.put("transaction", transactionById);
-    return "transactionbyid";
-  }
+	
+	public  Transaction findById(Long transactionId) {
+		
+		return transactionRepo.findAll()
+		.stream()
+		.filter(id -> id.getId().equals(transactionId))
+		.findFirst()
+		.orElse(null);
+	}
+//		for (Transaction transaction:transactionRepo.findAll()) {
+//			if(transaction.getId().equals(transactionId)) {
+//				return  transaction;
+//			}
+//		}
+//		return null;
+
 }
