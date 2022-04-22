@@ -25,7 +25,6 @@ public class TransactionService {
 		
 		return sortedTransaction;
 	}
-	
 
 	
 	public  Transaction findById(Long transactionId) {
@@ -36,6 +35,7 @@ public class TransactionService {
 		.findFirst()
 		.orElse(null);
 	}
+	
 //		for (Transaction transaction:transactionRepo.findAll()) {
 //			if(transaction.getId().equals(transactionId)) {
 //				return  transaction;
