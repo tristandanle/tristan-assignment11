@@ -1,46 +1,43 @@
-package com.codercampus.Assignment11.service;
+package com.codercampus.Assignment11.web;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.codercampus.Assignment11.domain.Transaction;
-import com.codercampus.Assignment11.repository.TransactionRepository;
+import com.codercampus.Assignment11.service.TransactionService;
 
-@Service
-public class TransactionService {
-	
+@Controller
+public class TransactionController {
+
 	@Autowired
-	private TransactionRepository transactionRepo;
+	private TransactionService transactionService;
 
-	public List<Transaction> findAll() {
-		List<Transaction> sortedTransaction = 
-				transactionRepo.findAll()
-				.stream()
-				.sorted(Comparator.comparing(Transaction::getDate))
-				.collect(Collectors.toList());
-		
-		return sortedTransaction;
-	}
-	
+	// Fetch transactions from repository to HTML view
+	@GetMapping("/transactions")
+	public String getTransactions(ModelMap model) {
 
-	
-	public  Transaction findById(Long transactionId) {
-		
-		return transactionRepo.findAll()
-		.stream()
-		.filter(id -> id.getId().equals(transactionId))
-		.findFirst()
-		.orElse(null);
+		List<Transaction> allTransactions = transactionService.findAll();
+		// Transaction transaction = new Transaction();
+		// model.put("transaction", transaction);
+		model.put("transactions", allTransactions); // all transactions
+		for (Transaction transaction : allTransactions) {
+			System.out.println(transaction);
+		}
+		return "transactions";
+
 	}
-//		for (Transaction transaction:transactionRepo.findAll()) {
-//			if(transaction.getId().equals(transactionId)) {
-//				return  transaction;
-//			}
-//		}
-//		return null;
+
+	@GetMapping("/transactions/{transactionId}")
+	public String getTransaction(@PathVariable Long transactionId, ModelMap model) {
+
+		Transaction transactionById = transactionService.findById(transactionId);
+		model.put("transaction", transactionById);
+		return "transactionbyid";
+	}
 
 }
