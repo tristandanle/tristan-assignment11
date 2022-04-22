@@ -12,35 +12,25 @@ import com.codercampus.Assignment11.repository.TransactionRepository;
 
 @Service
 public class TransactionService {
-	
-	@Autowired
-	private TransactionRepository transactionRepo;
 
-	public List<Transaction> findAll() {
-		List<Transaction> sortedTransaction = 
-				transactionRepo.findAll()
-				.stream()
-				.sorted(Comparator.comparing(Transaction::getDate))
-				.collect(Collectors.toList());
-		
-		return sortedTransaction;
-	}
+  @Autowired
+  private TransactionRepository transactionRepo;
 
-	
-	public  Transaction findById(Long transactionId) {
-		
-		return transactionRepo.findAll()
-		.stream()
-		.filter(id -> id.getId().equals(transactionId))
-		.findFirst()
-		.orElse(null);
-	}
-	
-//		for (Transaction transaction:transactionRepo.findAll()) {
-//			if(transaction.getId().equals(transactionId)) {
-//				return  transaction;
-//			}
-//		}
-//		return null;
+  public List < Transaction > findAll() {
+    List < Transaction > sortedTransaction = transactionRepo.findAll().stream().sorted(Comparator.comparing(Transaction::getDate)).collect(Collectors.toList());
 
+    return sortedTransaction;
+  }
+
+  public Transaction findById(Long transactionId) {
+
+    return transactionRepo.findAll().stream().filter(id - >id.getId().equals(transactionId)).findFirst().orElse(null);
+  }
+
+  //		for (Transaction transaction:transactionRepo.findAll()) {
+  //			if(transaction.getId().equals(transactionId)) {
+  //				return  transaction;
+  //			}
+  //		}
+  //		return null;
 }
